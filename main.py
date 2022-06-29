@@ -1,4 +1,7 @@
 import menu
 
-if __name__ == '__main__':
-    menu.Menu.pegar()
+
+class Main:
+    if __name__ == '__main__':
+        menu = menu.Menu()
+        menu.pegarArquivo()
