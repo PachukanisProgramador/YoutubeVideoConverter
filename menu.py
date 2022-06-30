@@ -1,4 +1,4 @@
-import videoFile
+import converter
 from pytube import YouTube
 import moviepy.editor as arquivo
 import os
@@ -8,15 +8,20 @@ import this
 class Menu:
 
     def __init__(self):
-        this.user = os.getenv('USERNAME')  # Pegar o nome de usuário do computador
-        this.url = input('URL: ')  # URL do video que você quer converter
+        print('====================================\n'
+              'BEM-VINDO AO CONVERSOR DE ARQUIVOS!\n'
+              '====================================')
         pass
 
     @staticmethod
-    def pegarArquivo():
-        video = YouTube(this.url).streams.get_audio_only()
-        video.download(rf'C:\Users\{this.user}\Desktop\mp3')
-        title = str(video.title)
-        clip = arquivo.AudioFileClip(rf'C:\Users\{this.user}\Desktop\mp3\{title}.mp4')
-        clip.write_audiofile(rf'C:\Users\{this.user}\Desktop\mp3\{title}.mp3')
-        os.remove(rf'C:\Users\{this.user}\Desktop\mp3\{title}.mp4')
+    def opcoes():
+        url = ''
+
+        while url != '0':
+            print('Digite abaixo a URL do video do youtube que você deseja converter.\nOu digite 0 para SAIR:')
+            url = input()  # URL do video que você quer converter
+
+            if url != '0':
+                converter.Converter(url).converterArquivo()
+
+        print('Obrigado!')
