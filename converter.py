@@ -1,30 +1,33 @@
+import subprocess
 from pytube import YouTube
-import moviepy.editor as editor
 import os
 import this
-import math
-
 
 class Converter:
 
     def __init__(self, video_url):
-        this.video_url = video_url
+        this.__video_url = video_url
         this.__caminho = os.getcwd() + '\\arquivos_mp3'  # Pegar o caminho da pasta em uso e adicionar a pasta arquivos_mp3
 
     @staticmethod
     def converterArquivo():
         try:
-            this.video_url = YouTube(this.video_url).streams.get_audio_only()  #
+            this.__video_url = YouTube(this.__video_url).streams.get_audio_only()  #
 
-            this.video_url.download(rf'{this.__caminho}')
+            this.__video_url.download(rf'{this.__caminho}')
 
-            title = str(this.video_url.title)
+            title = this.__video_url.default_filename
 
-            audio = editor.AudioFileClip(rf'{this.__caminho}\{title}.mp4', buffersize=math.inf)
+            print(f'Caminho: {this.__caminho}')
+            print(title)
 
-            print(audio.duration)
+            titulo = this.__video_url.title
+            print(rf'ffmpeg -i {os.path.join(this.__caminho, title)} {os.path.join(this.__caminho, f"{titulo}.mp3")}')
 
-            audio.write_audiofile(rf'{this.__caminho}\{title}.mp3')
+            subprocess.run([
+                rf'ffmpeg', '-i', os.path.join(this.__caminho, title),
+                os.path.join(this.__caminho, f'{titulo}.mp3')
+            ])
 
             os.remove(rf'{this.__caminho}\{title}.mp4')
 
