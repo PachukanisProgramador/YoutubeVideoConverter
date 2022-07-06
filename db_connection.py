@@ -7,7 +7,7 @@ class DbConnection:
     @staticmethod
     def conectar():
         try:
-            db_connection = mysql.connector.connect(host= 'localhost', user= 'root', password='', database='BancoDeDados')
+            db_connection = mysql.connector.connect(host='localhost', user='root', password='', database='BancoDeDados')
 
             print('Conectado com sucesso!')
             return db_connection
