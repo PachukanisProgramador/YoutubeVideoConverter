@@ -7,10 +7,10 @@ class DbConnection:
     @staticmethod
     def conectar():
         try:
-            db_connection = mysql.connector.connect(host='localhost', user='root', password='', database='BancoDeDados')
+            __connection = mysql.connector.connect(host='localhost', user='root', password='', database='YoutubeVideoConverter')
 
             print('Conectado com sucesso!')
-            return db_connection
+            return __connection
 
         except mysql.connector.Error as error:  # Guardando as possíveis exceções de mysql.connector na variável 'error'
 
@@ -24,4 +24,4 @@ class DbConnection:
                 print(error.msg)
 
         else:
-            db_connection.close()
+            __connection.close()

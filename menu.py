@@ -1,16 +1,13 @@
 import converter
-from pytube import YouTube
-import moviepy.editor as arquivo
-import os
-import this
+from rich.console import Console
 
 
 class Menu:
 
     def __init__(self):
-        print('\n\n\n=============================\n'
+        Console().print('\n\n\n===================================\n'
               'BEM-VINDO AO CONVERSOR DE ARQUIVOS!\n'
-              '=============================\n\n')
+              '===================================\n\n', style='bold yellow')
         pass
 
     @staticmethod
@@ -18,17 +15,20 @@ class Menu:
         try:
             opcao = -1
             while opcao != 0:
-                opcao = int(input('Deseja converter links únicos ou uma playlist?\n\n1. Links únicos\n2. Playlist\n0. Sair\n'))
+                opcao = int(input('Deseja converter links únicos ou uma playlist?\n\n1. Links únicos\n2. Playlist\n3. Excluir vídeo no banco de dados\n0. Sair\n'))
                 if opcao == 1:
                     Menu.opcaoLinkUnico()
                 elif opcao == 2:
                     Menu.opcaoPlaylist()
+                elif opcao == 3:
+                    Menu.excluir()
                 elif opcao == 0:
                     break
                 else:
-                    print('Comando não encontrado.')
+                    Console().print('Comando não encontrado.', style='bold red')
 
-            print('Aproveite seus arquivos!')
+            Console().print("Aproveite seus arquivos!", style="bold underline green")
+
         except Exception as error:
             print(f'Erro na função {Menu.opcoes().__name__}:\n{error}')
 
@@ -58,7 +58,7 @@ class Menu:
             elif qualidade == 0:
                 break
             else:
-                print('Comando não encontrado.')
+                Console().print('Comando não encontrado.', style='bold red')
 
     @staticmethod
     def opcaoPlaylist():
@@ -83,6 +83,10 @@ class Menu:
             elif qualidade == 0:
                 break
             else:
-                print('Comando não encontrado.')
+                Console().print('Comando não encontrado.', style='bold red')
 
-
+    @staticmethod
+    def excluir():
+        print('Digite o código do arquivo no banco de dados que você gostaria de excluir:')
+        codigo = int(input())
+        converter.Converter().excluirVideo(codigo)
