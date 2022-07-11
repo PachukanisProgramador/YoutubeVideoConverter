@@ -2,6 +2,7 @@ import db_connection
 import this
 from rich.console import Console
 
+
 class Dao:
 
     def __init__(self):
@@ -18,7 +19,7 @@ class Dao:
             return print(f'{this.__con.rowcount} linha(s) afetada(s).')
 
         except Exception as error:
-            return print(f'Erro no comando inserir.\n{error.msg}')
+            return print(f'Erro no comando inserir.\n{error}')
 
     @staticmethod
     def excluir(codigo):
@@ -33,3 +34,30 @@ class Dao:
 
         except Exception as error:
             print(error)
+
+    @staticmethod
+    def consultarId():
+        db = db_connection.DbConnection.conectar()
+        con = db.cursor()
+
+        try:
+            texto_codigo = 'SELECT * FROM midia'
+            con.execute(texto_codigo)
+            for (idMidia) in con:
+                return idMidia
+        except Exception as error:
+            print(error)
+
+    @staticmethod
+    def consultarNome():
+        db = db_connection.DbConnection.conectar()
+        con = db.cursor()
+
+        try:
+            texto_codigo = 'SELECT * FROM midia'
+            con.execute(texto_codigo)
+            for (nome) in con:
+                return nome
+        except Exception as error:
+            print(error)
+
