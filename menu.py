@@ -1,8 +1,7 @@
 import converter
 from rich.console import Console
 import dao
-from rich import box
-from rich.table import Table
+import os
 
 
 class Menu:
@@ -16,19 +15,30 @@ class Menu:
     @staticmethod
     def opcoes():
         opcao = -1
-
+        loop = 0
         try:
             while opcao != 0:
+
+                os.system('cls' if os.name == 'nt' else 'clear')
+
+                if loop == 0:
+                    Console().print('\n\n\n===================================\n'
+                                    'BEM-VINDO AO CONVERSOR DE ARQUIVOS!\n'
+                                    '===================================\n\n', style='bold yellow')
+
+                Menu.consultar()
+                loop = loop + 1
+
                 opcao = int(input('Deseja converter links únicos ou uma playlist?\n\n'
                                   '1. Links únicos\n'
                                   '2. Playlist\n'
                                   '3. Excluir vídeo no banco de dados\n0. Sair\n'))
+
                 if opcao == 1:
                     Menu.opcaoLinkUnico()
                 elif opcao == 2:
                     Menu.opcaoPlaylist()
                 elif opcao == 3:
-                    Menu.consultar()
                     Menu.excluir()
                 elif opcao == 0:
                     break
@@ -47,7 +57,7 @@ class Menu:
 
         while qualidade != 0:
             qualidade = int(input(
-                'Gostaria de baixar o vídeo em alta ou baixa qualidade?\n'
+                '\nGostaria de baixar o vídeo em alta ou baixa qualidade?\n'
                 '1. Baixa qualidade\n'
                 '2. Alta qualidade\n'
                 '0. Voltar\n'))
@@ -55,7 +65,7 @@ class Menu:
             if qualidade == 1:
                 while url != '0':
                     print(
-                        'Digite abaixo a URL do video do youtube que você deseja converter.\n'
+                        '\nDigite abaixo a URL do video do youtube que você deseja converter.\n'
                         'Ou digite 0 para VOLTAR:')
                     url = input()  # URL do video que você quer converter
 
@@ -64,7 +74,7 @@ class Menu:
 
             elif qualidade == 2:
                 while url != '0':
-                    print('Digite abaixo a URL do video do youtube que você deseja converter.\n'
+                    print('\nDigite abaixo a URL do video do youtube que você deseja converter.\n'
                           'Ou digite 0 para VOLTAR:')
                     url = input()  # URL do video que você quer converter
 
@@ -75,7 +85,7 @@ class Menu:
                 break
 
             else:
-                Console().print('Comando não encontrado.', style='bold red')
+                Console().print('\nComando não encontrado.', style='bold red')
 
     @staticmethod
     def opcaoPlaylist():
@@ -83,20 +93,20 @@ class Menu:
         qualidade = -1
 
         while qualidade != 0:
-            qualidade = int(input('Gostaria de baixar a playlist em alta ou baixa qualidade?\n'
+            qualidade = int(input('\nGostaria de baixar a playlist em alta ou baixa qualidade?\n'
                                   '1. Baixa qualidade\n'
                                   '2. Alta qualidade\n'
                                   '0. Voltar\n'))
             if qualidade == 1:
                 while url != '0':
-                    print('Digite abaixo a URL da playlist do youtube que você deseja baixar e converter.\n'
+                    print('\nDigite abaixo a URL da playlist do youtube que você deseja baixar e converter.\n'
                           'Ou digite 0 para VOLTAR:')
                     url = input()  # URL do video que você quer converter
                     if url != '0':
                         print(converter.Converter().converterArquivosPlaylist(url, qualidade))
             elif qualidade == 2:
                 while url != '0':
-                    print('Digite abaixo a URL da playlist do youtube que você deseja baixar e converter.\n'
+                    print('\nDigite abaixo a URL da playlist do youtube que você deseja baixar e converter.\n'
                           'Ou digite 0 para VOLTAR:')
                     url = input()  # URL do video que você quer converter
                     if url != '0':
@@ -105,7 +115,7 @@ class Menu:
             elif qualidade == 0:
                 break
             else:
-                Console().print('Comando não encontrado.', style='bold red')
+                Console().print('\nComando não encontrado.', style='bold red')
 
     @staticmethod
     def consultar():
@@ -121,7 +131,7 @@ class Menu:
     @staticmethod
     def excluir():
         dao.Dao.consultar()
-        print('Digite o código do arquivo que você gostaria de excluir:')
+        print('\nDigite o código do arquivo que você gostaria de excluir:')
         codigo = int(input())
         converter.Converter().excluirVideo(codigo)
 

@@ -1,5 +1,4 @@
 import db_connection
-import this
 from rich.console import Console
 from rich import box
 from rich.table import Table
@@ -8,31 +7,29 @@ from rich.table import Table
 class Dao:
 
     def __init__(self):
-        this.__db = db_connection.DbConnection.conectar()
-        this.__con = this.__db.cursor()
+        self.__db = db_connection.DbConnection.conectar()
+        self.__con = self.__db.cursor()
 
-    @staticmethod
-    def inserir(nome, arquivo):
+    def inserir(self, nome, arquivo):
         try:
             texto_codigo = f"INSERT INTO midia(idMidia, nome, arquivo) VALUES('','{nome}','{arquivo}')"
-            this.__con.execute(texto_codigo)
-            this.__db.commit()
+            self.__con.execute(texto_codigo)
+            self.__db.commit()
 
-            return print(f'{this.__con.rowcount} linha(s) afetada(s).')
+            return print(f'{self.__con.rowcount} linha(s) afetada(s).')
 
         except Exception as error:
             return print(f'Erro no comando inserir.\n{error}')
 
-    @staticmethod
-    def excluir(codigo):
+    def excluir(self, codigo):
         try:
             texto_codigo = f"DELETE FROM midia WHERE idMidia = '{codigo}'"
-            this.__con.execute(texto_codigo)
-            this.__db.commit()
-            if this.__con.rowcount == 0:
+            self.__con.execute(texto_codigo)
+            self.__db.commit()
+            if self.__con.rowcount == 0:
                 Console().print("Código não encontrado. Digite um código existente.", style="red")
             else:
-                print(f'{this.__con.rowcount} linha(s) afetada(s)')
+                print(f'{self.__con.rowcount} linha(s) afetada(s)')
 
         except Exception as error:
             print(error)
