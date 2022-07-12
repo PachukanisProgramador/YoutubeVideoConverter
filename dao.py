@@ -1,6 +1,8 @@
 import db_connection
 import this
 from rich.console import Console
+from rich import box
+from rich.table import Table
 
 
 class Dao:
@@ -36,28 +38,27 @@ class Dao:
             print(error)
 
     @staticmethod
-    def consultarId():
+    def consultar():
         db = db_connection.DbConnection.conectar()
         con = db.cursor()
+        tabela = Table(title="Arquivos MP3",
+                       style='bold red',
+                       box=box.HEAVY_HEAD,
+                       show_lines=True,
+                       safe_box=True,
+                       expand=True)
+
+        tabela.add_column("Código", justify="left", style="cyan", no_wrap=True)
+        tabela.add_column("Nome", justify="left", style="cyan", no_wrap=True)
 
         try:
             texto_codigo = 'SELECT * FROM midia'
             con.execute(texto_codigo)
-            for (idMidia) in con:
-                return idMidia
+
+            for (idMidia, nome, arquivo) in con:
+                tabela.add_row(str(idMidia), str(nome))
+
+            return tabela
+
         except Exception as error:
-            print(error)
-
-    @staticmethod
-    def consultarNome():
-        db = db_connection.DbConnection.conectar()
-        con = db.cursor()
-
-        try:
-            texto_codigo = 'SELECT * FROM midia'
-            con.execute(texto_codigo)
-            for (nome) in con:
-                return nome
-        except Exception as error:
-            print(error)
-
+            print(error.args)

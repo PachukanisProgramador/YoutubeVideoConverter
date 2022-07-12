@@ -24,7 +24,7 @@ class Converter:
 
         if qualidade == 1:
             video_stream = YouTube(video_url).streams.get_lowest_resolution()  # Baixando arquivo MP4 na pior qualidade.
-        else:
+        elif qualidade == 2:
             video_stream = YouTube(video_url).streams.get_highest_resolution()  # Baixando arquivo MP4 na melhor qualidade possível.
 
         return video_stream
@@ -34,38 +34,34 @@ class Converter:
         Converter.verificarPasta()
 
         playlist = Playlist(playlist_url)  # Baixando arquivo MP4 na pior qualidade.
-        lista_videos = []
 
-        if qualidade == 1:
-            for video in playlist.videos:
-                lista_videos.append(video)
+        for video in playlist.videos:
+            if qualidade == 1:
+                video_stream = video.streams.get_lowest_resolution()  # Baixando playlist em MP4 através de list comprehension  na pior qualidade possível.
+                return video_stream
+            elif qualidade == 2:
+                video_stream = video.streams.get_highest_resolution()  # Baixando playlist em MP4 através de list comprehension  na melhor qualidade possível.
+                return video_stream
 
-            return lista_videos  # Baixando playlist em MP4 através de list comprehension  na pior qualidade possível.
-        else:
-            for video in playlist.videos:
-                lista_videos.append(video)
-                return lista_videos  # Baixando playlist em MP4 através de list comprehension  na melhor qualidade possível.
 
     @staticmethod
     def converterArquivoUnico(video_url, qualidade):  # Função principal onde o arquivo é convertido.
         try:
-
-            lista_youtube = Converter.baixarArquivoUrl(video_url, qualidade)
-
             # Tratar arquivo e definir caminhos
-            for video_converter in lista_youtube:
 
-                video_converter.download(output_path=rf'{this.__caminho}')  # Informando o caminho em que o arquivo será baixado.
-                arquivo_mp4 = os.path.join(this.__caminho, video_converter.default_filename)  # Informando o caminho do arquivo MP4
-                nome = video_converter.default_filename.replace('.mp4', '')  # Definindo o nome do arquivo MP3 igual ao do MP4, retirando a extensão .mp4
-                caminho_arquivo_convertido = os.path.join(this.__caminho, f'{nome}.mp3')  # Especificando o caminho do arquivo que será convertido para mp3
-                video = VideoFileClip(arquivo_mp4)  # Convertendo o arquivo para mp3 e salvando no caminho anteriormente instanciado
-                audio = video.audio
-                audio.write_audiofile(caminho_arquivo_convertido)
-                this.__dao.inserir(nome, video)  # Inserindo no banco de dados
-                video.close()
-                audio.close()
-                os.remove(arquivo_mp4)  # Removendo arquivo mp4 anteriormente baixado
+            Converter.baixarArquivoUrl(video_url, qualidade).download(output_path=rf'{this.__caminho}')  # Informando o caminho em que o arquivo será baixado.
+            arquivo_mp4 = os.path.join(this.__caminho, Converter.baixarArquivoUrl(video_url, qualidade).default_filename)  # Informando o caminho do arquivo MP4
+            nome = Converter.baixarArquivoUrl(video_url, qualidade).default_filename.replace('.mp4', '')  # Definindo o nome do arquivo MP3 igual ao do MP4, retirando a extensão .mp4
+            caminho_arquivo_convertido = os.path.join(this.__caminho, f'{nome}.mp3')  # Especificando o caminho do arquivo que será convertido para mp3
+
+            video = VideoFileClip(arquivo_mp4)  # Convertendo o arquivo para mp3 e salvando no caminho anteriormente instanciado
+            audio = video.audio
+            audio.write_audiofile(caminho_arquivo_convertido)
+            this.__dao.inserir(nome, video)  # Inserindo no banco de dados
+            video.close()
+            audio.close()
+
+            os.remove(arquivo_mp4)  # Removendo arquivo mp4 anteriormente baixado
 
             return f'Arquivo convertido com sucesso. Ele pode ser encontrado em:\n' \
                    f'{caminho_arquivo_convertido}'
@@ -76,13 +72,10 @@ class Converter:
     @staticmethod
     def converterArquivosPlaylist(video_url, qualidade):
         try:
-
             # Tratar arquivo e definir caminhos
-            arquivo = Converter.baixarPlaylist(video_url, qualidade)
-            arquivo.download(output_path=rf'{this.__caminho}')  # Informando o caminho em que o arquivo será baixado.
-
-            arquivo_mp4 = os.path.join(this.__caminho, arquivo.default_filename)
-            nome = arquivo.default_filename.replace('.mp4', '')
+            Converter.baixarPlaylist(video_url, qualidade).download(output_path=rf'{this.__caminho}')  # baixando e informando o caminho em que o arquivo será baixado.
+            arquivo_mp4 = os.path.join(this.__caminho, Converter.baixarPlaylist(video_url, qualidade).default_filename)
+            nome = Converter.baixarPlaylist(video_url, qualidade).default_filename.replace('.mp4', '')
 
             # Especificando o caminho do arquivo que será convertido para mp3
             caminho_arquivo_convertido = os.path.join(this.__caminho, f'{nome}.mp3')
@@ -95,7 +88,7 @@ class Converter:
             video.close()
             audio.close()
 
-            this.__dao.inserir(arquivo.default_filename, nome)  # Inserindo no banco de dados
+            this.__dao.inserir(Converter.baixarPlaylist(video_url, qualidade).default_filename, nome)  # Inserindo no banco de dados
 
             os.remove(arquivo_mp4)  # Removendo arquivo mp4 anteriormente baixado
 

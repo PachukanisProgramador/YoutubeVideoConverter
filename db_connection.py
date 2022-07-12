@@ -7,7 +7,10 @@ class DbConnection:
     @staticmethod
     def conectar():
         try:
-            __connection = mysql.connector.connect(host='localhost', user='root', password='', database='YoutubeVideoConverter')
+            __connection = mysql.connector.connect(host='localhost',
+                                                   user='root',
+                                                   password='',
+                                                   database='YoutubeVideoConverter')
 
             print('Conectado com sucesso!')
             return __connection

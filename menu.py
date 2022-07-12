@@ -15,8 +15,9 @@ class Menu:
 
     @staticmethod
     def opcoes():
+        opcao = -1
+
         try:
-            opcao = -1
             while opcao != 0:
                 opcao = int(input('Deseja converter links únicos ou uma playlist?\n\n'
                                   '1. Links únicos\n'
@@ -107,23 +108,20 @@ class Menu:
                 Console().print('Comando não encontrado.', style='bold red')
 
     @staticmethod
+    def consultar():
+        try:
+
+            console = Console()
+            tabela = dao.Dao.consultar()
+            console.print(tabela)
+
+        except Exception as error:
+            print(error)
+
+    @staticmethod
     def excluir():
         dao.Dao.consultar()
-        print('Digite o código do arquivo no banco de dados que você gostaria de excluir:')
+        print('Digite o código do arquivo que você gostaria de excluir:')
         codigo = int(input())
         converter.Converter().excluirVideo(codigo)
 
-    @staticmethod
-    def consultar():
-        tabela = Table(title="Arquivos MP3", style='bold red', box=box.HEAVY_HEAD)
-        tabela.add_column("ID", justify="right", style="cyan", no_wrap=True)
-        tabela.add_column("Nome", justify="right", style="cyan", no_wrap=True)
-
-        for (idMidia) in dao.Dao.consultarId():
-            tabela.add_row(idMidia)
-
-        for(nome) in dao.Dao.consultarNome():
-            tabela.add_row(nome)
-
-        console = Console()
-        console.print(tabela)
