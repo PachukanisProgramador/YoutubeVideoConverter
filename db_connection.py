@@ -4,27 +4,35 @@ from mysql.connector import errorcode  # Trata as execções que irão surgir
 
 class DbConnection:
 
-    @staticmethod
-    def conectar():
+    def __init__(self):
+        self.__connection = mysql.connector.connect(host='localhost',
+                                                    user='root',
+                                                    password='',
+                                                    database='YoutubeVideoConverter')
+
+    # Função para conectar com o banco de dados
+    def conectar(self):
         try:
-            __connection = mysql.connector.connect(host='localhost',
-                                                   user='root',
-                                                   password='',
-                                                   database='YoutubeVideoConverter')
+            return self.__connection
 
-            print('Conectado com sucesso!')
-            return __connection
+        # Guardando as possíveis exceções de mysql.connector na variável 'error'
+        except mysql.connector.Error as error:
 
-        except mysql.connector.Error as error:  # Guardando as possíveis exceções de mysql.connector na variável 'error'
-
-            if error.errno == errorcode.ER_NO_DB_ERROR:  # Caso o bando de dados não exista
+            # Caso o banco de dados não exista
+            if error.errno == errorcode.ER_NO_DB_ERROR:
                 print(f'Banco de dados não existe.\n{error.msg}')
+
+            # Caso o banco de dados esteja com o usuário ou senha incorretos.
             elif error.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print(f'Usuário ou senha de acesso ao Banco de Dados estão incorretos.\n{error.msg}')
+
+            # Caso o banco de dados tenha algum outro erro de código
             elif error.errno == errorcode.ER_BAD_DB_ERROR:
                 print(f'Erro de conexão com o Banco de dados.\n {error}')
+
+            # Quaisquer outros erros com o banco de dados
             else:
                 print(error.msg)
 
         else:
-            __connection.close()
+            self.__connection.close()
